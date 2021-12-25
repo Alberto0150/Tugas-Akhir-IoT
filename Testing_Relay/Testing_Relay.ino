@@ -2,8 +2,12 @@
 //pin led yang kakinya panjang yang positif
 //pin led yg kakinya pendek yg negatif
 
-//normally open (NO)[kanan kalau dari arah tulisan GND, IN1, IN2, IN3, IN4, VCC] ke positif / pin kaki panjang
-//common (COM) [tengah] ke negatif / pin kaki pendek
+//normally open (NO)[kanan kalau dari arah tulisan GND, IN1, IN2, IN3, IN4, VCC] ke pin positif elektronik (dia penerus power dari COM)
+//common (COM) [tengah] dari power source
+
+// GND -> negatif
+// Pin -> positif 
+// 5v,3v -> power (ardu -> vcc)
 
 //Referensi : https://www.nyebarilmu.com/cara-mengakses-relay-menggunakan-arduino-uno/
 // ardu   - board  - relay 
