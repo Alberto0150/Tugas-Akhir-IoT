@@ -1,18 +1,18 @@
-
 import cv2
-import urllib.request
+import urllib.request as urllib
 import numpy as np
- 
+
+## Change IP private
+url = "http://192.168.149.156:81/stream"  
+
 f_cas= cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
 eye_cascade=cv2.CascadeClassifier(cv2.data.haarcascades +'haarcascade_eye.xml')
-## Choose cam type
-##'''cam.bmp / cam-lo.jpg /cam-hi.jpg / cam.mjpeg '''
-## Change IP private
-url='http://192.168.33.156:81/'
-cv2.namedWindow("Live Transmission", cv2.WINDOW_AUTOSIZE)
+
+cv2.namedWindow("ESP32 Cam Feed", cv2.WINDOW_AUTOSIZE)
+
  
 while True:
-    img_resp=urllib.request.urlopen(url)
+    img_resp=urllib.urlopen(url)
     imgnp=np.array(bytearray(img_resp.read()),dtype=np.uint8)
     img=cv2.imdecode(imgnp,-1)
     gray=cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
