@@ -3,7 +3,7 @@ import urllib.request as urllib
 import numpy as np
 
 ## Change IP private
-url = "http://192.168.149.156:81/stream"  
+url = "http://192.168.122.156:81/stream"  
 
 f_cas= cv2.CascadeClassifier(cv2.data.haarcascades+'haarcascade_frontalface_default.xml')
 eye_cascade=cv2.CascadeClassifier(cv2.data.haarcascades +'haarcascade_eye.xml')
