@@ -1,13 +1,15 @@
 import cv2 as cv
 import numpy as np
 from urllib.request import urlopen
-import os
-import datetime
-import time
 import sys
 
 #change to your ESP32-CAM ip
-url="http://192.168.1.149:9601/stream"
+url="http://192.168.229.156:81/stream"
+# url="http://192.168.229.156:81/capture"
+# url="http://"
+# url+= sys.argv[1]
+# # Stream port 
+# url+=":81/stream"
 CAMERA_BUFFRER_SIZE=4096
 stream=urlopen(url)
 bts=b''
@@ -21,8 +23,10 @@ while True:
             jpg=bts[jpghead:jpgend+2]
             bts=bts[jpgend+2:]
             img=cv.imdecode(np.frombuffer(jpg,dtype=np.uint8),cv.IMREAD_UNCHANGED)
+            img=cv.flip(img,0)           
+            h,w=img.shape[:2]
             img=cv.resize(img,(640,480))
-            cv.imshow("a",img)
+            cv.imshow("Img-Capturing",img)
         k=cv.waitKey(1)
     except Exception as e:
         print("Error:" + str(e))
@@ -31,11 +35,6 @@ while True:
         continue
     
     k=cv.waitKey(1)
-    # Press A to capture
-    if k & 0xFF == ord('a'):
-        cv.imwrite(str(i) + ".jpg", img)
-        i=i+1
-    # Press Q to quit
     if k & 0xFF == ord('q'):
         break
 cv.destroyAllWindows()
