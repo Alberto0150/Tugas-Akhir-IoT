@@ -15,6 +15,4 @@ def capture_mode(IP, counter_capture_before_delete):
     work_path=os.path.join(dir, image_file_name)
 
     urlopen.urlretrieve(url,work_path)
-    # TODO cari cara connect ke yolo
-    # 1. opencv manual dnn, atau
-    # 2. call exec SC yolo    
+    
