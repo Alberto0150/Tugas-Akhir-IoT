@@ -3,14 +3,15 @@
 ###  Part 2 (can be Modified check commit): https://github.com/Alberto0150/yolov5
 
 ### Version :
-Python 3.9.10
-Arduino IDE 1.8.16
+- Python 3.9.10  
+- Arduino IDE 1.8.16
 
 ### Must install / include : 
 #### Python :
 - All YOLO requirement (check the other github repo README.md)
 - ```pip install pyduinobridge```
 - ```pip install pyserial```
+- ```pip install requests```
 
 #### Arduino IDE:
 - Additional Boards Manager URLs (Location: File > Preferences): 
