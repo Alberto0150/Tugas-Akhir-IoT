@@ -52,12 +52,15 @@ httpd_handle_t stream_httpd = NULL;
 
 static const char PROGMEM INDEX_HTML[] = R"rawliteral(
 <html>
+  <head>
+  <meta http-equiv="refresh" content="300">
+  </head>
   <body>
     <img src="" id="photo" >
    <script>
    function toggleCheckbox(x) {
      var xhr = new XMLHttpRequest();
-     xhr.open("GET", "/action?go=" + x, true);
+     xhr.open("GET", "/action?command=" + x, true);
      xhr.send();
    }
    window.onload = document.getElementById("photo").src = window.location.href.slice(0, -1) + ":81/stream";
@@ -65,7 +68,8 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
   </body>
 </html>
 )rawliteral";
-// TODO modify line 95 - 99
+// meta tag for refreshing page every 300 seconds
+// TODO modify 
 // bagian penting: toggleCheckbox(x)
 
 static esp_err_t index_handler(httpd_req_t *req){
@@ -132,6 +136,40 @@ static esp_err_t stream_handler(httpd_req_t *req){
   return res;
 }
 
+static esp_err_t capture_handler(httpd_req_t *req){
+    camera_fb_t * fb = NULL;
+    esp_err_t res = ESP_OK;
+
+    fb = esp_camera_fb_get();
+    if (!fb) {
+        Serial.println("Camera capture failed");
+        httpd_resp_send_500(req);
+        return ESP_FAIL;
+    }
+
+    httpd_resp_set_type(req, "image/jpeg");
+    httpd_resp_set_hdr(req, "Content-Disposition", "inline; filename=capture.jpg");
+    httpd_resp_set_hdr(req, "Access-Control-Allow-Origin", "*");
+
+    size_t out_len, out_width, out_height;
+    uint8_t * out_buf;
+    bool s;
+    bool detected = false;
+    int face_id = 0;
+    if(fb->width > 400){
+        size_t fb_len = 0;
+        if(fb->format == PIXFORMAT_JPEG){
+            fb_len = fb->len;
+            res = httpd_resp_send(req, (const char *)fb->buf, fb->len);
+        } 
+        esp_camera_fb_return(fb);
+        return res;
+    }
+
+    esp_camera_fb_return(fb);
+    return res;
+}
+
 // Recieving Result from GET Request URL
 static esp_err_t cmd_handler(httpd_req_t *req){
   char*  buf;
@@ -146,7 +184,7 @@ static esp_err_t cmd_handler(httpd_req_t *req){
       return ESP_FAIL;
     }
     if (httpd_req_get_url_query_str(req, buf, buf_len) == ESP_OK) {
-      if (httpd_query_key_value(buf, "go", variable, sizeof(variable)) == ESP_OK) {
+      if (httpd_query_key_value(buf, "command", variable, sizeof(variable)) == ESP_OK) {
       } else {
         free(buf);
         httpd_resp_send_404(req);
@@ -166,11 +204,13 @@ static esp_err_t cmd_handler(httpd_req_t *req){
   sensor_t * s = esp_camera_sensor_get();
   int res = 0;
   
+  // value = ON -> turn on electronics
   if(!strcmp(variable, "ON")) {
     Serial.println("Turning on...");
     digitalWrite(RELAY_COM_RED_LED, 1);
     digitalWrite(LAMP, 0);
   }
+  // value = OFF -> turn off electronics
   else if(!strcmp(variable, "OFF")) {
     Serial.println("Turning off...");
     digitalWrite(RELAY_COM_RED_LED, 0);
