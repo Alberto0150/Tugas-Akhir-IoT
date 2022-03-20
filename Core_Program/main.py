@@ -5,7 +5,7 @@ import os
 
 if __name__ == '__main__':
     time_to_loop_per_sec = 5
-    IP_for_capture = "192.168.229.156" # Set IP
+    IP_for_capture = "192.168.1.5" # Set IP
     counter_capture_before_delete = 1
     max_limit_capture_before_delete = 100
 
@@ -20,7 +20,7 @@ if __name__ == '__main__':
         image_capture.capture_mode(IP_for_capture,counter_capture_before_delete)
 
         # Execute Yolo Program
-        yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/'+str(counter_capture_before_delete)+'.jpg'
+        yolo_exec_command = 'python ./yolov5/detect.py --source ./'+str(counter_capture_before_delete)+'.png'
         running_program = os.popen(yolo_exec_command)
         out_status_program = running_program.read()
         # TODO read output untuk terun ke esp32

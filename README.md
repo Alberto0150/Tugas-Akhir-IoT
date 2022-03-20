@@ -8,10 +8,12 @@
 
 ### Must install / include : 
 #### Python :
-- All YOLO requirement (check the other github repo README.md)
+- All YOLO requirement (check the YOLO github repo README.md)
 - ```pip install pyduinobridge```
 - ```pip install pyserial```
 - ```pip install requests```
+- ```pip install selenium```
+- Install current Chrome Driver [here](https://chromedriver.chromium.org/downloads)
 
 #### Arduino IDE:
 - Additional Boards Manager URLs (Location: File > Preferences): 

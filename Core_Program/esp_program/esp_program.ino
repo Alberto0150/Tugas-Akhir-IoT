@@ -53,7 +53,6 @@ httpd_handle_t stream_httpd = NULL;
 static const char PROGMEM INDEX_HTML[] = R"rawliteral(
 <html>
   <head>
-  <meta http-equiv="refresh" content="300">
   </head>
   <body>
     <img src="" id="photo" >

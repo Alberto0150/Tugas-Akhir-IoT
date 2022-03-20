@@ -1,7 +1,9 @@
 #include "esp_camera.h"
 #include <WiFi.h>
-#include <pyduino_bridge.h>
-
+#include "fb_gfx.h"
+#include "soc/soc.h"             
+#include "soc/rtc_cntl_reg.h"    
+#include "esp_http_server.h"
 //
 // WARNING!!! PSRAM IC required for UXGA resolution and high JPEG quality
 //            Ensure ESP32 Wrover Module or other board with PSRAM is selected
@@ -12,8 +14,8 @@
 
 #include "camera_pins.h"
 
-const char* ssid = "Alberto";
-const char* password = "albertoooo";
+const char* ssid = "wifi aja";
+const char* password = "Felicianus";
 
 void startCameraServer();
 
@@ -46,18 +48,6 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
-  
-  // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
-  //                      for larger pre-allocated frame buffer.
-  if(psramFound()){
-    config.frame_size = FRAMESIZE_UXGA;
-    config.jpeg_quality = 10;
-    config.fb_count = 2;
-  } else {
-    config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 12;
-    config.fb_count = 1;
-  }
   
   // camera init
   esp_err_t err = esp_camera_init(&config);
