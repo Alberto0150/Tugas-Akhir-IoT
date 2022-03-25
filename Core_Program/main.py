@@ -1,3 +1,4 @@
+from codecs import Codec
 import core_timer as timer
 import image_capture 
 import remove_image
@@ -9,6 +10,13 @@ if __name__ == '__main__':
     counter_capture_before_delete = 1
     max_limit_capture_before_delete = 100
 
+    # Get Current location
+    current_location = os.getcwd()
+    # Set chromedriver.exe location
+    exec_chrome_driver_path = "C:/Users/asus/Downloads/chromedriver/chromedriver.exe"
+    # Set saving image location
+    saving_image_path = './Main-Image-Captured'
+    
     # while True:
     value_timer = timer.timer_function(time_to_loop_per_sec)
     # print(value_timer)
@@ -17,10 +25,14 @@ if __name__ == '__main__':
     if value_timer == True :
         
         # Execute Capture Image
-        image_capture.capture_mode(IP_for_capture,counter_capture_before_delete)
+        image_capture.capture_mode(IP_for_capture,counter_capture_before_delete, exec_chrome_driver_path, saving_image_path)
+
+        # Current exec location : @saving_image_path → check before running
+        # Change back location
+        os.chdir(path=current_location)
 
         # Execute Yolo Program
-        yolo_exec_command = 'python ./yolov5/detect.py --source ./'+str(counter_capture_before_delete)+'.png'
+        yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/'+str(counter_capture_before_delete)+'.png'
         running_program = os.popen(yolo_exec_command)
         out_status_program = running_program.read()
         # TODO read output untuk terun ke esp32

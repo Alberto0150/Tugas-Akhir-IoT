@@ -5,6 +5,7 @@
 ### Version :
 - Python 3.9.10  
 - Arduino IDE 1.8.16
+- Chrome Version 99.0.4844.82 
 
 ### Must install / include : 
 #### Python :
