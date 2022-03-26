@@ -1,4 +1,3 @@
-from codecs import Codec
 import core_timer as timer
 import image_capture 
 import remove_image
@@ -35,7 +34,13 @@ if __name__ == '__main__':
         yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/'+str(counter_capture_before_delete)+'.png'
         running_program = os.popen(yolo_exec_command)
         out_status_program = running_program.read()
-        # TODO read output untuk terun ke esp32
+        print(out_status_program)
+        # Check if "person"
+        result_path = saving_image_path + "/result.txt"
+        result_file = open(result_path, "r")
+        if result_file.read() == 'person':
+            # TODO return hasil ubah ke http req
+            print('hore')
         
         # Set counter for naming file
         if counter_capture_before_delete == max_limit_capture_before_delete:
