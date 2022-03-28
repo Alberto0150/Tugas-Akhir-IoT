@@ -10,10 +10,10 @@ from selenium.webdriver.chrome.options import Options
 def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path, saving_image_path):
     #change to your ESP32-CAM ip
     # url = "https://cdn.pixabay.com/photo/2020/02/06/09/39/summer-4823612_960_720.jpg"
-    # url = "https://youtube.com"
+    url = "https://youtube.com"
     # url="http://192.168.229.156:81/stream"
-    url="http://"
-    url += IP
+    # url="http://"
+    # url += IP
     # url +=":81/capture"
     
     # Change default saving location
