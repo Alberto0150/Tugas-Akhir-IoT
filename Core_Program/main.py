@@ -1,12 +1,13 @@
 import core_timer as timer
 import image_capture 
 import remove_image
+import get_request
 import os
 import subprocess
 
 if __name__ == '__main__':
     time_to_loop_per_sec = 5
-    IP_for_capture = "192.168.1.5" # Set IP
+    IP_ESP = "192.168.1.5" # Set IP
     counter_capture_before_delete = 1
     max_limit_capture_before_delete = 100
 
@@ -19,13 +20,11 @@ if __name__ == '__main__':
     
     # while True:
     value_timer = timer.timer_function(time_to_loop_per_sec)
-    # print(value_timer)
 
     # If pass the time_to_loop_sec
     if value_timer == True :
-        
         # Execute Capture Image
-        image_capture.capture_mode(IP_for_capture,counter_capture_before_delete, exec_chrome_driver_path, saving_image_path)
+        image_capture.capture_mode(IP_ESP,counter_capture_before_delete, exec_chrome_driver_path, saving_image_path)
 
         # Current exec location : @saving_image_path → check before running
         # Change back location
@@ -35,14 +34,15 @@ if __name__ == '__main__':
         yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/'+str(counter_capture_before_delete)+'.png'
         running_program = subprocess.Popen(yolo_exec_command)
         stdoutdata, stderrdata = running_program.communicate()
-        # print ("Output run:" + str(running_program.returncode))
 
         # Check if "person"
         result_path = saving_image_path + "/result.txt"
         result_file = open(result_path, "r")
         if  'person' in result_file.read():
             # TODO return hasil ubah ke http req
-            print('hore\n')
+            get_request.sending_get_request(IP_ESP,1)
+        else:
+            get_request.sending_get_request(IP_ESP,0)
         
         # Set counter for naming file
         if counter_capture_before_delete == max_limit_capture_before_delete:
