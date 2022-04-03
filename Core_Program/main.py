@@ -7,7 +7,7 @@ import subprocess
 
 if __name__ == '__main__':
     time_to_loop_per_sec = 5
-    IP_ESP = "192.168.1.5" # Set IP
+    IP_ESP = "192.168.1.7" # Set IP
     counter_capture_before_delete = 1
     max_limit_capture_before_delete = 100
 
@@ -39,7 +39,6 @@ if __name__ == '__main__':
         result_path = saving_image_path + "/result.txt"
         result_file = open(result_path, "r")
         if  'person' in result_file.read():
-            # TODO return hasil ubah ke http req
             get_request.sending_get_request(IP_ESP,1)
         else:
             get_request.sending_get_request(IP_ESP,0)

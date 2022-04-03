@@ -8,14 +8,13 @@ def sending_get_request(IP_ESP,type_send):
     
     if type_send == 1:
         url += "ON"
-        x = requests.get(url)
     elif type_send == 0:
         url += "OFF"
-        x = requests.get(url)
-
+       
+    x = requests.get(url)
 
     #print the response (the content of the requested file):
-    # print(x.text)
+    print(x.text)
     # print(x.status_code)
     # print(type_send)
 

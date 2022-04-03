@@ -3,10 +3,11 @@ from selenium import webdriver
 
 def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path, saving_image_path):
     #change to your ESP32-CAM ip
-    # url="http://"
-    # url += IP
+    url="http://"
+    url += IP
+    # url += ":81/stream"
     # Sample IP:
-    url = "https://youtube.com"
+    # url = "https://youtube.com"
 
 
     # Change default running location
