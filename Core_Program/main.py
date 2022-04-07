@@ -7,9 +7,10 @@ import subprocess
 
 if __name__ == '__main__':
     time_to_loop_per_sec = 5
-    IP_ESP = "192.168.1.7" # Set IP
+    IP_ESP_Cam = "192.168.153.156" # Set IP
     counter_capture_before_delete = 1
     max_limit_capture_before_delete = 100
+    # print(IP_ESP_Cam)
 
     # Get Current location
     current_location = os.getcwd()
@@ -24,7 +25,7 @@ if __name__ == '__main__':
     # If pass the time_to_loop_sec
     if value_timer == True :
         # Execute Capture Image
-        image_capture.capture_mode(IP_ESP,counter_capture_before_delete, exec_chrome_driver_path, saving_image_path)
+        image_capture.capture_mode(IP_ESP_Cam,counter_capture_before_delete, exec_chrome_driver_path, saving_image_path)
 
         # Current exec location : @saving_image_path → check before running
         # Change back location
@@ -39,18 +40,15 @@ if __name__ == '__main__':
         result_path = saving_image_path + "/result.txt"
         result_file = open(result_path, "r")
         if  'person' in result_file.read():
-            get_request.sending_get_request(IP_ESP,1)
+            get_request.sending_get_request(IP_ESP_Cam,1)
         else:
-            get_request.sending_get_request(IP_ESP,0)
+            get_request.sending_get_request(IP_ESP_Cam,0)
         
         # Set counter for naming file
-        if counter_capture_before_delete == max_limit_capture_before_delete:
+        if counter_capture_before_delete >= max_limit_capture_before_delete:
             # Reset counter
             counter_capture_before_delete = 0
+            # Removing old file
+            remove_image.remove_mode()
         else:
             counter_capture_before_delete+=1
-
-        # Removing old file
-        if counter_capture_before_delete > max_limit_capture_before_delete:
-            remove_image.remove_mode()
-        

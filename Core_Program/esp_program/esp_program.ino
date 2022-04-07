@@ -9,8 +9,8 @@
 #include "esp_http_server.h"
 
 // Declare Local Wifi SSID & Pass
-const char* ssid = "wifi aja";
-const char* password = "Felicianus";
+const char* ssid = "Alberto";
+const char* password = "albertoooo";
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 
@@ -207,13 +207,13 @@ static esp_err_t cmd_handler(httpd_req_t *req){
   if(!strcmp(variable, "ON")) {
     Serial.println("Turning on...");
     digitalWrite(RELAY_COM_RED_LED, 1);
-    digitalWrite(LAMP, 0);
+//    digitalWrite(LAMP, 0);
   }
   // value = OFF -> turn off electronics
   else if(!strcmp(variable, "OFF")) {
     Serial.println("Turning off...");
     digitalWrite(RELAY_COM_RED_LED, 0);
-    digitalWrite(LAMP, 1);
+//    digitalWrite(LAMP, 1);
   }
   else {
     res = -1;
