@@ -1,7 +1,6 @@
 import requests
 
 def sending_get_request(IP_ESP,type_send):
-    # url = 'https://w3schools.com/python/demopage.php'
     url ="http://"
     url += IP_ESP
     url += "/action?command="
@@ -12,12 +11,7 @@ def sending_get_request(IP_ESP,type_send):
         url += "ON"
     
     print(url)
-    x = requests.get(url)
-
-    #print the response (the content of the requested file):
-    # print(x.text)
-    # print(x.status_code)
-    # print(type_send)
+    requests.get(url)
 
 if __name__ == '__main__':
     sending_get_request(1)
