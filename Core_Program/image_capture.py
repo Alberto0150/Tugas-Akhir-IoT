@@ -18,7 +18,7 @@ def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path, savi
     driver = webdriver.Chrome(executable_path= exec_path)
     driver.get(url)
     
-    file_name = str(counter_capture_before_delete) + ".png"
+    file_name = IP + "." + str(counter_capture_before_delete) + ".png"
     
     driver.get_screenshot_as_file(file_name)
     driver.quit()
