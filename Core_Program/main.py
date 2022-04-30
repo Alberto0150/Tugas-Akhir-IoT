@@ -6,12 +6,18 @@ import os
 import subprocess
 import threading
 
+thread_list = {}
+flag = 0
+
 time_to_loop_per_sec = 5
-IP_ESP_Cam_Array = ["192.168.29.156",
-                    "192.168.29.156",
+IP_ESP_Cam_Array = ["youtube.com",
+                    "youtube.com",
                     ] # Set IP
+total_ESP = len(IP_ESP_Cam_Array) + 1
+
 counter_capture_before_delete = 1
 max_limit_capture_before_delete = 100
+
 
 # Get Current location
 current_location = os.getcwd()
@@ -21,23 +27,25 @@ exec_chrome_driver_path = "C:/Users/asus/Downloads/chromedriver/chromedriver.exe
 saving_image_path = './Main-Image-Captured'
 
 def thread_task(current_IP):
+    global counter_capture_before_delete
+
     time.sleep(time_to_loop_per_sec)
 
     # Execute Capture Image
-    image_capture.capture_mode(current_IP,counter_capture_before_delete, exec_chrome_driver_path, saving_image_path)
+    image_capture.capture_mode(current_IP,1, exec_chrome_driver_path, saving_image_path)
 
     # Current exec location : @saving_image_path → check before running
     # Change back location
     os.chdir(path=current_location)
 
     # Execute Yolo Program
-    # TODO edit di yolov5 biar bisa multi saving,(1: by additional param, 2: idk yet 😣 )
-    yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + str(counter_capture_before_delete) + '.png'
+    # TODO modify penamaan nama file yang berformat angka statis( disini masih '1')
+    yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + '1' + '.png' + ' --custom-report-destination ' + current_IP
     running_program = subprocess.Popen(yolo_exec_command)
     stdoutdata, stderrdata = running_program.communicate()
 
     # Check if "person"
-    result_path = saving_image_path + "/" + current_IP + "result.txt"
+    result_path = saving_image_path + "/" + current_IP + "-result.txt"
     result_file = open(result_path, "r")
     if  'person' in result_file.read():
         get_request.sending_get_request(current_IP,0)
@@ -52,20 +60,31 @@ def thread_task(current_IP):
         remove_image.remove_mode()
     else:
         counter_capture_before_delete+=1
+    thread_list[current_IP]= 'DONE'
 
-
+def create_thread():
+    if len(threading.enumerate()) < total_ESP :
+        print(current_IP)
+        new_thread = threading.Thread(target=thread_task,args=(current_IP,))
+        print("Creating thread...")
+        new_thread.start()
+        print("Appending...")
+        thread_list[current_IP]=new_thread.name
+        print(new_thread.name)
+        time.sleep(1)
+        print(threading.enumerate())
+        
 if __name__ == '__main__':
     
     # TODO buat loop 'threading'
     # TODO buat pakai apa gitu, biar misal thread1 kelar dan diatas 5 detik, baru distart lagi htread1. begitu juga thread2 sampai thread-N
     # while True:
     for current_IP in IP_ESP_Cam_Array:
-        # Get array index for threadID
-        IP_index = IP_ESP_Cam_Array.index(current_IP)
-        thread_name = "thread"+str(IP_index)
-        new_thread = threading.Thread(target=thread_task,args=(current_IP,),name=thread_name)
-        # Dari siniiiiii!!!
-        if not new_thread.is_alive():
-            new_thread.start()
-
+        # Creating thread
+        if flag == 1:
+            if thread_list[current_IP] == 'DONE':
+                create_thread()
+        else:
+            create_thread()
+    flag = 1
         
