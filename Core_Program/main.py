@@ -11,7 +11,7 @@ flag = 0
 
 time_to_loop_per_sec = 5
 IP_ESP_Cam_Array = ["youtube.com",
-                    "youtube.com",
+                    "twitch.com",
                     ] # Set IP
 total_ESP = len(IP_ESP_Cam_Array) + 1
 
@@ -24,7 +24,7 @@ current_location = os.getcwd()
 # Set chromedriver.exe location
 exec_chrome_driver_path = "C:/Users/asus/Downloads/chromedriver/chromedriver.exe"
 # Set saving image location
-saving_image_path = './Main-Image-Captured'
+saving_image_path = './Main-Image-Captured/'
 
 def thread_task(current_IP):
     global counter_capture_before_delete
@@ -32,11 +32,18 @@ def thread_task(current_IP):
     time.sleep(time_to_loop_per_sec)
 
     # Execute Capture Image
-    image_capture.capture_mode(current_IP,1, exec_chrome_driver_path, saving_image_path)
+    try:
+        os.chdir(path=saving_image_path)
+    except:
+        pass
+    image_capture.capture_mode(current_IP,'1', exec_chrome_driver_path)
 
     # Current exec location : @saving_image_path → check before running
     # Change back location
-    os.chdir(path=current_location)
+    try:
+        os.chdir(path=current_location)
+    except:
+        pass
 
     # Execute Yolo Program
     # TODO modify penamaan nama file yang berformat angka statis( disini masih '1')

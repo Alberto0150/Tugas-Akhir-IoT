@@ -1,14 +1,14 @@
 import os
 from selenium import webdriver
 
-def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path, saving_image_path):
+def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path):
     #change to your ESP32-CAM ip
     url="http://"
     url += IP
 
 
     # Change default running location
-    os.chdir(path=saving_image_path)
+    # os.chdir(path=saving_image_path)
 
     # Set path for chrome driver
     exec_path = exec_chrome_driver_path
