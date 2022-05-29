@@ -10,8 +10,8 @@ thread_list = {}
 flag = 0
 
 time_to_loop_per_sec = 5
-IP_ESP_Cam_Array = ["youtube.com",
-                    "twitch.com",
+IP_ESP_Cam_Array = ["192.168.240.172",
+                    "192.168.240.156",
                     ] # Set IP
 total_ESP = len(IP_ESP_Cam_Array) + 1
 
