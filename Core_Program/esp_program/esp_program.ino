@@ -67,9 +67,6 @@ static const char PROGMEM INDEX_HTML[] = R"rawliteral(
   </body>
 </html>
 )rawliteral";
-// meta tag for refreshing page every 300 seconds
-// TODO modify 
-// bagian penting: toggleCheckbox(x)
 
 static esp_err_t index_handler(httpd_req_t *req){
   httpd_resp_set_type(req, "text/html");
@@ -201,6 +198,8 @@ static esp_err_t cmd_handler(httpd_req_t *req){
   }
 
   sensor_t * s = esp_camera_sensor_get();
+  s->set_contrast(s, 2);       // -2 to 2
+  s->set_saturation(s, -2);     // -2 to 2
   int res = 0;
   
   // value = ON -> turn on electronics
@@ -298,9 +297,9 @@ void setup() {
   // if PSRAM IC present, init with UXGA resolution and higher JPEG quality
   //                      for larger pre-allocated frame buffer.
   if(psramFound()){
-    config.frame_size = FRAMESIZE_UXGA;
-    config.jpeg_quality = 10;
-    config.fb_count = 2;
+    config.frame_size = FRAMESIZE_SVGA;
+    config.jpeg_quality = 15;
+    config.fb_count = 5;
   } else {
     config.frame_size = FRAMESIZE_SVGA;
     config.jpeg_quality = 12;

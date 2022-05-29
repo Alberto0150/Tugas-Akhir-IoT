@@ -5,8 +5,9 @@
 ### Version :
 - Python 3.9.10  
 - Arduino IDE 1.8.16
-- Chrome Version 99.0.4844.82 
+- Chrome Version 102.0.5005.63
 
+--- 
 ### Must install / include : 
 #### Python :
 - All YOLO requirement (check the YOLO github repo README.md)
@@ -21,3 +22,7 @@
 ``` https://dl.espressif.com/dl/package_esp32_index.json, http://arduino.esp8266.com/stable/package_esp8266com_index.json ```
 - Custom "esp32 cam library"
 - pyduino bridge (by Daniel Saromo)
+
+---
+### Additional Reference
+- ESP Cam camera setting: [Here](https://randomnerdtutorials.com/esp32-cam-ov2640-camera-settings/)

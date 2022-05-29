@@ -1,54 +1,95 @@
-import core_timer as timer
+import time
 import image_capture 
 import remove_image
 import get_request
 import os
 import subprocess
+import threading
 
-if __name__ == '__main__':
-    time_to_loop_per_sec = 5
-    IP_ESP_Cam = "192.168.29.156" # Set IP
-    counter_capture_before_delete = 1
-    max_limit_capture_before_delete = 100
-    # print(IP_ESP_Cam)
+thread_list = {}
+flag = 0
 
-    # Get Current location
-    current_location = os.getcwd()
-    # Set chromedriver.exe location
-    exec_chrome_driver_path = "C:/Users/asus/Downloads/chromedriver/chromedriver.exe"
-    # Set saving image location
-    saving_image_path = './Main-Image-Captured'
+time_to_loop_per_sec = 5
+IP_ESP_Cam_Array = ["192.168.240.172",
+                    "192.168.240.156",
+                    ] # Set IP
+total_ESP = len(IP_ESP_Cam_Array) + 1
+
+counter_capture_before_delete = 1
+max_limit_capture_before_delete = 100
+
+
+# Get Current location
+current_location = os.getcwd()
+# Set chromedriver.exe location
+exec_chrome_driver_path = "C:/Users/asus/Downloads/chromedriver/chromedriver.exe"
+# Set saving image location
+saving_image_path = './Main-Image-Captured/'
+
+def thread_task(current_IP):
+    global counter_capture_before_delete
+
+    time.sleep(time_to_loop_per_sec)
+
+    # Execute Capture Image
+    try:
+        os.chdir(path=saving_image_path)
+    except:
+        pass
+    image_capture.capture_mode(current_IP,'1', exec_chrome_driver_path)
+
+    # Current exec location : @saving_image_path → check before running
+    # Change back location
+    try:
+        os.chdir(path=current_location)
+    except:
+        pass
+
+    # Execute Yolo Program
+    # TODO modify penamaan nama file yang berformat angka statis( disini masih '1')
+    yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + '1' + '.png' + ' --custom-report-destination ' + current_IP
+    running_program = subprocess.Popen(yolo_exec_command)
+    stdoutdata, stderrdata = running_program.communicate()
+
+    # Check if "person"
+    result_path = saving_image_path + "/" + current_IP + "-result.txt"
+    result_file = open(result_path, "r")
+    if  'person' in result_file.read():
+        get_request.sending_get_request(current_IP,0)
+    else:
+        get_request.sending_get_request(current_IP,1)
     
-    while True:
-        value_timer = timer.timer_function(time_to_loop_per_sec)
+    # Set counter for naming file
+    if counter_capture_before_delete >= max_limit_capture_before_delete:
+        # Reset counter
+        counter_capture_before_delete = 0
+        # Removing old file
+        remove_image.remove_mode()
+    else:
+        counter_capture_before_delete+=1
+    thread_list[current_IP]= 'DONE'
 
-        # If pass the time_to_loop_sec
-        if value_timer == True :
-            # Execute Capture Image
-            image_capture.capture_mode(IP_ESP_Cam,counter_capture_before_delete, exec_chrome_driver_path, saving_image_path)
-
-            # Current exec location : @saving_image_path → check before running
-            # Change back location
-            os.chdir(path=current_location)
-
-            # Execute Yolo Program
-            yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/'+str(counter_capture_before_delete)+'.png'
-            running_program = subprocess.Popen(yolo_exec_command)
-            stdoutdata, stderrdata = running_program.communicate()
-
-            # Check if "person"
-            result_path = saving_image_path + "/result.txt"
-            result_file = open(result_path, "r")
-            if  'person' in result_file.read():
-                get_request.sending_get_request(IP_ESP_Cam,0)
-            else:
-                get_request.sending_get_request(IP_ESP_Cam,1)
-            
-            # Set counter for naming file
-            if counter_capture_before_delete >= max_limit_capture_before_delete:
-                # Reset counter
-                counter_capture_before_delete = 0
-                # Removing old file
-                remove_image.remove_mode()
-            else:
-                counter_capture_before_delete+=1
+def create_thread():
+    if len(threading.enumerate()) < total_ESP :
+        print(current_IP)
+        new_thread = threading.Thread(target=thread_task,args=(current_IP,))
+        print("Creating thread...")
+        new_thread.start()
+        print("Appending...")
+        thread_list[current_IP]=new_thread.name
+        print(new_thread.name)
+        time.sleep(1)
+        print(threading.enumerate())
+        
+if __name__ == '__main__':
+    
+    # while True:
+    for current_IP in IP_ESP_Cam_Array:
+        # Creating thread
+        if flag == 1:
+            if thread_list[current_IP] == 'DONE':
+                create_thread()
+        else:
+            create_thread()
+    flag = 1
+        
