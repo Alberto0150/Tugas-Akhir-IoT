@@ -83,8 +83,6 @@ def create_thread():
         
 if __name__ == '__main__':
     
-    # TODO buat loop 'threading'
-    # TODO buat pakai apa gitu, biar misal thread1 kelar dan diatas 5 detik, baru distart lagi htread1. begitu juga thread2 sampai thread-N
     # while True:
     for current_IP in IP_ESP_Cam_Array:
         # Creating thread
