@@ -10,8 +10,8 @@ thread_list = {}
 flag = 0
 
 time_to_loop_per_sec = 5
-IP_ESP_Cam_Array = ["192.168.240.172",
-                    "192.168.240.156",
+IP_ESP_Cam_Array = ["192.168.132.172",
+                    "192.168.132.156",
                     ] # Set IP
 total_ESP = len(IP_ESP_Cam_Array) + 1
 
@@ -32,16 +32,23 @@ def thread_task(current_IP):
     time.sleep(time_to_loop_per_sec)
 
     # Execute Capture Image
-    current_location = os.getcwd()
-    if saving_image_path not in current_location:
+    try:
         os.chdir(path=saving_image_path)
+    except:
+        pass
+    # current_location = os.getcwd()
+    # if saving_image_path not in current_location:
+        # os.chdir(path=saving_image_path)
+        # print('Change to image location')
     image_capture.capture_mode(current_IP,'1', exec_chrome_driver_path)
 
     # Current exec location : @saving_image_path → check before running
     # Change back location
     current_location = os.getcwd()
-    if current_location not in default_location:
-        os.chdir(path=default_location)
+    # if current_location not in default_location:
+    os.chdir(path=default_location)
+    print('Change to default location')
+        
 
     # Execute Yolo Program
     # TODO modify penamaan nama file yang berformat angka statis( disini masih '1')
