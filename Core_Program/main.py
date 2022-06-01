@@ -7,6 +7,7 @@ import subprocess
 import threading
 
 thread_list = {}
+each_IP_counter_list = {}
 flag = 0
 
 time_to_loop_per_sec = 5
@@ -19,7 +20,7 @@ counter_capture_before_delete = 1
 max_limit_capture_before_delete = 100
 
 
-# Get Defaultlocation
+# Get Default location
 default_location = os.getcwd()
 # Set chromedriver.exe location
 exec_chrome_driver_path = "C:/Users/asus/Downloads/chromedriver/chromedriver.exe"
@@ -32,17 +33,9 @@ def thread_task(current_IP):
     time.sleep(time_to_loop_per_sec)
 
     # Execute Capture Image
-    # try:
-    #     os.chdir(path=saving_image_path)
-    # except:
-    #     pass
-    # current_location = os.getcwd()
-    # if saving_image_path not in current_location:
-        # os.chdir(path=saving_image_path)
-        # print('Change to image location')
-    image_capture.capture_mode(current_IP,'1', exec_chrome_driver_path,saving_image_path)
+    temp_value = str(each_IP_counter_list[current_IP])
+    image_capture.capture_mode(current_IP, temp_value, exec_chrome_driver_path,saving_image_path)
 
-    # Current exec location : @saving_image_path → check before running
     # Change back location
     current_location = os.getcwd()
     if current_location not in default_location:
@@ -51,13 +44,11 @@ def thread_task(current_IP):
         
 
     # Execute Yolo Program
-    # TODO modify penamaan nama file yang berformat angka statis( disini masih '1')
-    yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + '1' + '.png' + ' --custom-report-destination ' + current_IP
+    yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + temp_value + '.png' + ' --custom-report-destination ' + current_IP
     running_program = subprocess.Popen(yolo_exec_command)
     stdoutdata, stderrdata = running_program.communicate()
 
     # Check if "person"
-    #result_path = saving_image_path + "/" + current_IP + "-result.txt"
     result_path = saving_image_path + current_IP + "-result.txt"
     result_file = open(result_path, "r")
     if  'person' in result_file.read():
@@ -68,7 +59,8 @@ def thread_task(current_IP):
     # Set counter for naming file
     if counter_capture_before_delete >= max_limit_capture_before_delete:
         # Reset counter
-        counter_capture_before_delete = 0
+        counter_capture_before_delete = 1
+        each_IP_counter_list[current_IP] = 1
         # Removing old file
         remove_image.remove_mode()
     else:
@@ -93,12 +85,17 @@ if __name__ == '__main__':
         saving_txt_detection_location = 'D:\\Coding-Tugas-Akhir\\Main-Image-Captured\\'+current_IP+'-result.txt'
         result_file = open(saving_txt_detection_location,"w")
         result_file.close()
+
+        # Initiate numbering for each image per IP
+        each_IP_counter_list[current_IP] = 1
+
     # while True:
     for current_IP in IP_ESP_Cam_Array:
         # Creating thread
         if flag == 1:
             if thread_list[current_IP] == 'DONE':
                 create_thread()
+                each_IP_counter_list[current_IP] += 1
         else:
             create_thread()
     flag = 1
