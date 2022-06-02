@@ -6,7 +6,6 @@ def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path,savin
     url="http://"
     url += IP
 
-
     # Change default running location
     # os.chdir(path=saving_image_path)
 

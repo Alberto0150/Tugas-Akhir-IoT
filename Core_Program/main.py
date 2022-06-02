@@ -69,13 +69,9 @@ def thread_task(current_IP):
 
 def create_thread():
     if len(threading.enumerate()) < total_ESP :
-        print(current_IP)
         new_thread = threading.Thread(target=thread_task,args=(current_IP,))
-        print("Creating thread...")
         new_thread.start()
-        print("Appending...")
         thread_list[current_IP]=new_thread.name
-        print(new_thread.name)
         time.sleep(1)
         print(threading.enumerate())
         
@@ -89,14 +85,14 @@ if __name__ == '__main__':
         # Initiate numbering for each image per IP
         each_IP_counter_list[current_IP] = 1
 
-    # while True:
-    for current_IP in IP_ESP_Cam_Array:
-        # Creating thread
-        if flag == 1:
-            if thread_list[current_IP] == 'DONE':
+    while True:
+        for current_IP in IP_ESP_Cam_Array:
+            # Creating thread
+            if flag == 1:
+                if thread_list[current_IP] == 'DONE':
+                    create_thread()
+                    each_IP_counter_list[current_IP] += 1
+            else:
                 create_thread()
-                each_IP_counter_list[current_IP] += 1
-        else:
-            create_thread()
-    flag = 1
+        flag = 1
         

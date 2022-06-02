@@ -14,4 +14,4 @@ def sending_get_request(IP_ESP,type_send):
     requests.get(url)
 
 if __name__ == '__main__':
-    sending_get_request(1)
+    sending_get_request('sample.com', 1)
