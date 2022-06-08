@@ -1,20 +1,15 @@
-import os
-from selenium import webdriver
+import cv2   #include opencv library functions in python
+import urllib.request
+import numpy as np
 
 def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path,saving_image_path):
-    #change to your ESP32-CAM ip
-    url="http://"
-    url += IP
-
-    # Set path for chrome driver
-    exec_path = exec_chrome_driver_path
-    driver = webdriver.Chrome(executable_path= exec_path)
-    driver.get(url)
+    #Change to your ESP32-CAM ip
+    url = "http://" + IP + "/capture"
     
-    file_name = saving_image_path + IP + "." + str(counter_capture_before_delete) + ".png"
+    file_name = saving_image_path + IP + "." + str(counter_capture_before_delete) + ".jpg"
     
-    driver.get_screenshot_as_file(file_name)
-    driver.quit()
+    #Saving image
+    urllib.request.urlretrieve(url, file_name)
 
 if __name__ == "__main__":
     capture_mode("youtube.com", 3, "C:/Users/asus/Downloads/chromedriver/chromedriver.exe", './Main-Image-Captured')
