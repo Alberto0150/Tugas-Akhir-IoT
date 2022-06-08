@@ -6,7 +6,7 @@ def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path,savin
     #Change to your ESP32-CAM ip
     url = "http://" + IP + "/capture"
     
-    file_name = saving_image_path + IP + "." + str(counter_capture_before_delete) + ".jpg"
+    file_name = saving_image_path + IP + "." + str(counter_capture_before_delete) + ".png"
     
     #Saving image
     urllib.request.urlretrieve(url, file_name)

@@ -11,7 +11,7 @@ each_IP_counter_list = {}
 flag = 0
 
 time_to_loop_per_sec = 5
-IP_ESP_Cam_Array = ["192.168.209.172",
+IP_ESP_Cam_Array = ["192.168.208.172",
                     ] # Set IP
 total_ESP = len(IP_ESP_Cam_Array) + 1
 
@@ -44,7 +44,7 @@ def thread_task(current_IP):
         os.chdir(path=default_location)
         
     # Execute Yolo Program
-    yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + temp_value + '.jpg' + ' --custom-report-destination ' + current_IP
+    yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + temp_value + '.png' + ' --custom-report-destination ' + current_IP
     running_program = subprocess.Popen(yolo_exec_command)
     stdoutdata, stderrdata = running_program.communicate()
 
