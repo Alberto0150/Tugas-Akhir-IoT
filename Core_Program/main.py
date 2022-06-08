@@ -11,13 +11,12 @@ each_IP_counter_list = {}
 flag = 0
 
 time_to_loop_per_sec = 5
-IP_ESP_Cam_Array = ["192.168.158.172",
-                    "192.168.158.156",
+IP_ESP_Cam_Array = ["192.168.209.172",
                     ] # Set IP
 total_ESP = len(IP_ESP_Cam_Array) + 1
 
 counter_capture_before_delete = 1
-max_limit_capture_before_delete = 100
+max_limit_capture_before_delete = 10
 
 
 # Get Default location
@@ -33,16 +32,17 @@ def thread_task(current_IP):
     time.sleep(time_to_loop_per_sec)
 
     # Execute Capture Image
-    temp_value = str(each_IP_counter_list[current_IP])
+    get_current_ip_counter = each_IP_counter_list[current_IP]
+    temp_value = str(get_current_ip_counter)
+    each_IP_counter_list[current_IP] = get_current_ip_counter + 1
+
     image_capture.capture_mode(current_IP, temp_value, exec_chrome_driver_path,saving_image_path)
 
     # Change back location
     current_location = os.getcwd()
     if current_location not in default_location:
         os.chdir(path=default_location)
-        print('Change to default location')
         
-
     # Execute Yolo Program
     yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + temp_value + '.png' + ' --custom-report-destination ' + current_IP
     running_program = subprocess.Popen(yolo_exec_command)
@@ -69,13 +69,9 @@ def thread_task(current_IP):
 
 def create_thread():
     if len(threading.enumerate()) < total_ESP :
-        print(current_IP)
         new_thread = threading.Thread(target=thread_task,args=(current_IP,))
-        print("Creating thread...")
         new_thread.start()
-        print("Appending...")
         thread_list[current_IP]=new_thread.name
-        print(new_thread.name)
         time.sleep(1)
         print(threading.enumerate())
         
@@ -89,14 +85,14 @@ if __name__ == '__main__':
         # Initiate numbering for each image per IP
         each_IP_counter_list[current_IP] = 1
 
-    # while True:
-    for current_IP in IP_ESP_Cam_Array:
-        # Creating thread
-        if flag == 1:
-            if thread_list[current_IP] == 'DONE':
+    while True:
+        for current_IP in IP_ESP_Cam_Array:
+            # Creating thread
+            if flag == 1:
+                if thread_list[current_IP] == 'DONE':
+                    create_thread()
+                    each_IP_counter_list[current_IP] += 1
+            else:
                 create_thread()
-                each_IP_counter_list[current_IP] += 1
-        else:
-            create_thread()
-    flag = 1
+        flag = 1
         

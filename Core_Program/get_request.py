@@ -1,4 +1,6 @@
 import requests
+import os
+os.system("") 
 
 def sending_get_request(IP_ESP,type_send):
     url ="http://"
@@ -10,8 +12,9 @@ def sending_get_request(IP_ESP,type_send):
     elif type_send == 0:
         url += "ON"
     
-    print(url)
+    
+    print('\033[32m' + url + '\033[0m')
     requests.get(url)
 
 if __name__ == '__main__':
-    sending_get_request(1)
+    sending_get_request('sample.com', 1)

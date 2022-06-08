@@ -258,6 +258,7 @@ void startCameraServer(){
   if (httpd_start(&camera_httpd, &config) == ESP_OK) {
     httpd_register_uri_handler(camera_httpd, &index_uri);
     httpd_register_uri_handler(camera_httpd, &cmd_uri);
+    httpd_register_uri_handler(camera_httpd, &capture_uri);
   }
   config.server_port += 1;
   config.ctrl_port += 1;
