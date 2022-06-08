@@ -91,7 +91,6 @@ if __name__ == '__main__':
             if flag == 1:
                 if thread_list[current_IP] == 'DONE':
                     create_thread()
-                    each_IP_counter_list[current_IP] += 1
             else:
                 create_thread()
         flag = 1
