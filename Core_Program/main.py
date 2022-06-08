@@ -7,20 +7,20 @@ import subprocess
 import threading
 
 thread_list = {}
+each_IP_counter_list = {}
 flag = 0
 
 time_to_loop_per_sec = 5
-IP_ESP_Cam_Array = ["192.168.240.172",
-                    "192.168.240.156",
+IP_ESP_Cam_Array = ["192.168.209.172",
                     ] # Set IP
 total_ESP = len(IP_ESP_Cam_Array) + 1
 
 counter_capture_before_delete = 1
-max_limit_capture_before_delete = 100
+max_limit_capture_before_delete = 10
 
 
-# Get Current location
-current_location = os.getcwd()
+# Get Default location
+default_location = os.getcwd()
 # Set chromedriver.exe location
 exec_chrome_driver_path = "C:/Users/asus/Downloads/chromedriver/chromedriver.exe"
 # Set saving image location
@@ -32,27 +32,24 @@ def thread_task(current_IP):
     time.sleep(time_to_loop_per_sec)
 
     # Execute Capture Image
-    try:
-        os.chdir(path=saving_image_path)
-    except:
-        pass
-    image_capture.capture_mode(current_IP,'1', exec_chrome_driver_path)
+    get_current_ip_counter = each_IP_counter_list[current_IP]
+    temp_value = str(get_current_ip_counter)
+    each_IP_counter_list[current_IP] = get_current_ip_counter + 1
 
-    # Current exec location : @saving_image_path → check before running
+    image_capture.capture_mode(current_IP, temp_value, exec_chrome_driver_path,saving_image_path)
+
     # Change back location
-    try:
-        os.chdir(path=current_location)
-    except:
-        pass
-
+    current_location = os.getcwd()
+    if current_location not in default_location:
+        os.chdir(path=default_location)
+        
     # Execute Yolo Program
-    # TODO modify penamaan nama file yang berformat angka statis( disini masih '1')
-    yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + '1' + '.png' + ' --custom-report-destination ' + current_IP
+    yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + temp_value + '.png' + ' --custom-report-destination ' + current_IP
     running_program = subprocess.Popen(yolo_exec_command)
     stdoutdata, stderrdata = running_program.communicate()
 
     # Check if "person"
-    result_path = saving_image_path + "/" + current_IP + "-result.txt"
+    result_path = saving_image_path + current_IP + "-result.txt"
     result_file = open(result_path, "r")
     if  'person' in result_file.read():
         get_request.sending_get_request(current_IP,0)
@@ -62,7 +59,8 @@ def thread_task(current_IP):
     # Set counter for naming file
     if counter_capture_before_delete >= max_limit_capture_before_delete:
         # Reset counter
-        counter_capture_before_delete = 0
+        counter_capture_before_delete = 1
+        each_IP_counter_list[current_IP] = 1
         # Removing old file
         remove_image.remove_mode()
     else:
@@ -71,25 +69,30 @@ def thread_task(current_IP):
 
 def create_thread():
     if len(threading.enumerate()) < total_ESP :
-        print(current_IP)
         new_thread = threading.Thread(target=thread_task,args=(current_IP,))
-        print("Creating thread...")
         new_thread.start()
-        print("Appending...")
         thread_list[current_IP]=new_thread.name
-        print(new_thread.name)
         time.sleep(1)
         print(threading.enumerate())
         
 if __name__ == '__main__':
     
-    # while True:
     for current_IP in IP_ESP_Cam_Array:
-        # Creating thread
-        if flag == 1:
-            if thread_list[current_IP] == 'DONE':
+        saving_txt_detection_location = 'D:\\Coding-Tugas-Akhir\\Main-Image-Captured\\'+current_IP+'-result.txt'
+        result_file = open(saving_txt_detection_location,"w")
+        result_file.close()
+
+        # Initiate numbering for each image per IP
+        each_IP_counter_list[current_IP] = 1
+
+    while True:
+        for current_IP in IP_ESP_Cam_Array:
+            # Creating thread
+            if flag == 1:
+                if thread_list[current_IP] == 'DONE':
+                    create_thread()
+                    each_IP_counter_list[current_IP] += 1
+            else:
                 create_thread()
-        else:
-            create_thread()
-    flag = 1
+        flag = 1
         
