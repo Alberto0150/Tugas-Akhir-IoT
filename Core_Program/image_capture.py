@@ -9,7 +9,12 @@ def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path,savin
     file_name = saving_image_path + IP + "." + str(counter_capture_before_delete) + ".png"
     
     #Saving image
-    urllib.request.urlretrieve(url, file_name)
+    try:
+        urllib.request.urlretrieve(url, file_name)
+    except urllib.ContentTooShortError:
+        print("Error when downloading "+ url+ ", Retrying...")
+        urllib.request.urlretrieve(url, file_name)
+
 
 if __name__ == "__main__":
     capture_mode("youtube.com", 3, "C:/Users/asus/Downloads/chromedriver/chromedriver.exe", './Main-Image-Captured')

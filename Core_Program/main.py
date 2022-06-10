@@ -11,12 +11,13 @@ each_IP_counter_list = {}
 flag = 0
 
 time_to_loop_per_sec = 5
-IP_ESP_Cam_Array = ["192.168.208.172",
+IP_ESP_Cam_Array = ["192.168.5.172",
+                    "192.168.5.156"
                     ] # Set IP
 total_ESP = len(IP_ESP_Cam_Array) + 1
 
 counter_capture_before_delete = 1
-max_limit_capture_before_delete = 10
+max_limit_capture_before_delete = 30
 
 
 # Get Default location
@@ -30,7 +31,12 @@ def thread_task(current_IP):
     global counter_capture_before_delete
 
     time.sleep(time_to_loop_per_sec)
-
+    # Set default result_path & Default value
+    result_path = saving_image_path + current_IP + "-result.txt"
+    result_file = open(result_path,"w")
+    result_file.write("Empty_Room")
+    result_file.close()
+    
     # Execute Capture Image
     get_current_ip_counter = each_IP_counter_list[current_IP]
     temp_value = str(get_current_ip_counter)
@@ -49,7 +55,6 @@ def thread_task(current_IP):
     stdoutdata, stderrdata = running_program.communicate()
 
     # Check if "person"
-    result_path = saving_image_path + current_IP + "-result.txt"
     result_file = open(result_path, "r")
     if  'person' in result_file.read():
         get_request.sending_get_request(current_IP,0)
@@ -57,12 +62,13 @@ def thread_task(current_IP):
         get_request.sending_get_request(current_IP,1)
     
     # Set counter for naming file
-    if counter_capture_before_delete >= max_limit_capture_before_delete:
+    get_current_ip_counter = each_IP_counter_list[current_IP]
+    if get_current_ip_counter > (max_limit_capture_before_delete/len(IP_ESP_Cam_Array)):
         # Reset counter
-        counter_capture_before_delete = 1
+        counter_capture_before_delete = counter_capture_before_delete - get_current_ip_counter
         each_IP_counter_list[current_IP] = 1
         # Removing old file
-        remove_image.remove_mode()
+        remove_image.remove_mode(current_IP)
     else:
         counter_capture_before_delete+=1
     thread_list[current_IP]= 'DONE'
@@ -80,7 +86,11 @@ if __name__ == '__main__':
     for current_IP in IP_ESP_Cam_Array:
         saving_txt_detection_location = 'D:\\Coding-Tugas-Akhir\\Main-Image-Captured\\'+current_IP+'-result.txt'
         result_file = open(saving_txt_detection_location,"w")
+        result_file.write("Initiating...")
         result_file.close()
+
+        # Set default start to be OFF
+        get_request.sending_get_request(current_IP,1)
 
         # Initiate numbering for each image per IP
         each_IP_counter_list[current_IP] = 1
