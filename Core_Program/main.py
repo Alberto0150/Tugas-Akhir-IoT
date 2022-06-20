@@ -18,7 +18,7 @@ if args.colorvu:
     ColorVu_Flag = 1
     ColorVu_username = 'admin' # Set username ColorVu
     ColorVu_password = 'cctv1234' # Set password ColorVu
-    ColorVu_cam_IP_array=['192.168.1.100'] # Set ColorVu IP
+    ColorVu_cam_IP_array=['192.168.1.103'] # Set ColorVu IP
     ColorVu_ESP_IP_list={} 
 else:
     ColorVu_Flag = 0
@@ -32,7 +32,7 @@ flag = 0
 
 time_to_loop_per_sec = 5
 
-IP_Cam_Relay_Array = ["192.168.1.100",
+IP_Cam_Relay_Array = ["192.168.1.104",
                     ] # Set ESP-Cam Relay IP
 total_ESP = len(IP_Cam_Relay_Array) + 1
 
@@ -63,10 +63,11 @@ def thread_task(current_IP):
     each_IP_counter_list[current_IP] = get_current_ip_counter + 1
 
     if ColorVu_Flag == 0:
-        image_capture.capture_mode_urlretrieve(current_IP, temp_value, exec_chrome_driver_path,saving_image_path)
+        image_capture.capture_mode_urlretrieve(current_IP, temp_value, saving_image_path)
     elif ColorVu_Flag == 1: 
         temp_IP = ColorVu_ESP_IP_list[current_IP]
-        image_capture.capture_mode_colorvu(temp_IP,current_IP, temp_value, saving_image_path,ColorVu_Flag,ColorVu_username,ColorVu_password)
+        custom_saving_image_path = 'D:/Coding-Tugas-Akhir/Main-Image-Captured/'
+        image_capture.capture_mode_colorvu(temp_IP,current_IP, temp_value, custom_saving_image_path,ColorVu_username,ColorVu_password)
 
     # Change back location
     current_location = os.getcwd()
@@ -110,6 +111,8 @@ if __name__ == '__main__':
         for x in range(len(IP_Cam_Relay_Array)):
             # Fill ESP - ColorVu IP list
             ColorVu_ESP_IP_list[IP_Cam_Relay_Array[x]]=ColorVu_cam_IP_array[x]
+
+    print(ColorVu_ESP_IP_list)
 
     
     for current_IP in IP_Cam_Relay_Array:

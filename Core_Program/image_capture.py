@@ -16,17 +16,20 @@ def capture_mode_urlretrieve(current_IP, temp_value, saving_image_path):
         print("Error when downloading "+ url+ ", Retrying...")
         urllib.request.urlretrieve(url, file_name)
 
-def capture_mode_colorvu(temp_IP, current_IP, counter_capture_before_delete,saving_image_path,ColorVu_username,ColorVu_password):
+def capture_mode_colorvu(temp_IP,current_IP, temp_value, saving_image_path,ColorVu_username,ColorVu_password):
     
     #Change url to view ColorVu Cam 
-    url = "rstp://" + ColorVu_username+ ':' + ColorVu_password + '@' + temp_IP + ":554/h264Preview_01_main"
-    
-    file_name = saving_image_path + current_IP + "." + str(counter_capture_before_delete) + ".png"
-    
+    url = "rtsp://" + ColorVu_username + ':' + ColorVu_password + '@' + temp_IP + ":554/h264Preview_01_main"
+    # rstp://admin:cctv1234@192.168.1.103:554/h264Preview_01_main
+    file_name = saving_image_path + current_IP + "." + str(temp_value) + ".png"
     #Saving image
     cv_image_capture = cv2.VideoCapture(url)
-    ret, frame = cv_image_capture.read()
-    cv2.imwrite(file_name, frame)   
+    if cv_image_capture.isOpened():
+        ret, frame = cv_image_capture.read()
+        cv2.imwrite(file_name, frame)   
+        cv2.waitKey(1)
+        cv_image_capture.release()
+    cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     capture_mode("youtube.com", 3, "C:/Users/asus/Downloads/chromedriver/chromedriver.exe", './Main-Image-Captured')

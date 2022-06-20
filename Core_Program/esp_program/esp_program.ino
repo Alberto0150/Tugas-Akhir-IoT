@@ -9,8 +9,8 @@
 #include "esp_http_server.h"
 
 // Declare Local Wifi SSID & Pass
-const char* ssid = "Alberto";
-const char* password = "albertoooo";
+const char* ssid = "Linksys01185";
+const char* password = "";
 
 #define PART_BOUNDARY "123456789000000000000987654321"
 
