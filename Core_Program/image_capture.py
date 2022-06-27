@@ -2,11 +2,12 @@ import cv2   #include opencv library functions in python
 import urllib.request
 import numpy as np
 
-def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path,saving_image_path):
-    #Change to your ESP32-CAM ip
-    url = "http://" + IP + "/capture"
+def capture_mode_urlretrieve(current_IP, temp_value, saving_image_path):
     
-    file_name = saving_image_path + IP + "." + str(counter_capture_before_delete) + ".png"
+    #Change url to view ESP32-CAM 
+    url = "http://" + current_IP + "/capture"
+    
+    file_name = saving_image_path + current_IP + "." + str(temp_value) + ".png"
     
     #Saving image
     try:
@@ -15,6 +16,20 @@ def capture_mode(IP, counter_capture_before_delete,exec_chrome_driver_path,savin
         print("Error when downloading "+ url+ ", Retrying...")
         urllib.request.urlretrieve(url, file_name)
 
+def capture_mode_colorvu(temp_IP,current_IP, temp_value, saving_image_path,ColorVu_username,ColorVu_password):
+    
+    #Change url to view ColorVu Cam 
+    url = "rtsp://" + ColorVu_username + ':' + ColorVu_password + '@' + temp_IP + ":554/h264Preview_01_main"
+
+    file_name = saving_image_path + current_IP + "." + str(temp_value) + ".png"
+    #Saving image
+    cv_image_capture = cv2.VideoCapture(url)
+    if cv_image_capture.isOpened():
+        ret, frame = cv_image_capture.read()
+        cv2.imwrite(file_name, frame)   
+        cv2.waitKey(1)
+        cv_image_capture.release()
+    cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    capture_mode("youtube.com", 3, "C:/Users/asus/Downloads/chromedriver/chromedriver.exe", './Main-Image-Captured')
+    capture_mode_urlretrieve('192.0.0.1', 4,'./Main-Image-Captured')
