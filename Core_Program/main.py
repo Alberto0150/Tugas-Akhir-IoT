@@ -8,12 +8,14 @@ import subprocess
 import threading
 import argparse
 
-# Accepting Optional argument
+# Accepting optional argument
 parser = argparse.ArgumentParser()
 parser.add_argument("-CV", "--colorvu", 
                     help="Change mode into ColorVu HIKVISION Camera",
                     action="store_true")
 args = parser.parse_args()
+
+# If using ColorVu camera
 if args.colorvu:
     ColorVu_Flag = 1
     ColorVu_username = 'admin' # Set username ColorVu
@@ -40,10 +42,8 @@ counter_capture_before_delete = 1
 max_limit_capture_before_delete = 30
 
 
-# Get Default location
+# Get default location
 default_location = os.getcwd()
-# Set chromedriver.exe location
-exec_chrome_driver_path = "C:/Users/asus/Downloads/chromedriver/chromedriver.exe"
 # Set saving image location
 saving_image_path = './Main-Image-Captured/'
 
@@ -57,7 +57,7 @@ def thread_task(current_IP):
     result_file.write("Empty_Room")
     result_file.close()
     
-    # Execute Capture Image
+    # Execute capture image
     get_current_ip_counter = each_IP_counter_list[current_IP]
     temp_value = str(get_current_ip_counter)
     each_IP_counter_list[current_IP] = get_current_ip_counter + 1
@@ -74,7 +74,7 @@ def thread_task(current_IP):
     if current_location not in default_location:
         os.chdir(path=default_location)
         
-    # Execute Yolo Program
+    # Execute YOLO program
     yolo_exec_command = 'python ./yolov5/detect.py --source ./Main-Image-Captured/' + current_IP + '.' + temp_value + '.png' + ' --custom-report-destination ' + current_IP
     running_program = subprocess.Popen(yolo_exec_command)
     stdoutdata, stderrdata = running_program.communicate()
@@ -137,4 +137,3 @@ if __name__ == '__main__':
             else:
                 create_thread()
         flag = 1
-        

@@ -40,7 +40,6 @@ const char* password = "";
 #endif
 
 // Declare pin part
-#define LAMP 4
 #define RELAY_COM_RED_LED 2
 
 static const char* _STREAM_CONTENT_TYPE = "multipart/x-mixed-replace;boundary=" PART_BOUNDARY;
@@ -206,13 +205,11 @@ static esp_err_t cmd_handler(httpd_req_t *req){
   if(!strcmp(variable, "ON")) {
     Serial.println("Turning on...");
     digitalWrite(RELAY_COM_RED_LED, 1);
-//    digitalWrite(LAMP, 0);
   }
   // value = OFF -> turn off electronics
   else if(!strcmp(variable, "OFF")) {
     Serial.println("Turning off...");
     digitalWrite(RELAY_COM_RED_LED, 0);
-//    digitalWrite(LAMP, 1);
   }
   else {
     res = -1;
@@ -327,7 +324,6 @@ void setup() {
   
   // Start streaming web server
   startCameraServer();
-  pinMode(LAMP, OUTPUT);
   pinMode(RELAY_COM_RED_LED, OUTPUT);
 }
 
