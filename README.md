@@ -1,28 +1,39 @@
-# Tugas-Akhir-IoT
+# Tugas-Akhir-IoT ~ Undergraduate Thesis IoT Project
 
-###  Part 2 (can be Modified check commit): https://github.com/Alberto0150/yolov5
+###  Yolov5 modified repository is [Here](https://github.com/Alberto0150/yolov5)
 
-### Version :
+### Version used:
 - Python 3.9.10  
 - Arduino IDE 1.8.16
-- Chrome Version 102.0.5005.63
 
 --- 
 ### Must install / include : 
-#### Python :
-- All YOLO requirement (check the YOLO github repo README.md)
-- ```pip install pyduinobridge```
-- ```pip install pyserial```
-- ```pip install requests```
-- ```pip install selenium```
-- Install current Chrome Driver [here](https://chromedriver.chromium.org/downloads)
+#### Python Library:
+- All YOLOv5 requirement (requirement.txt on Yolov5 modified repository) 
+- cv2
+- numpy 
+- urllib.request
+- requests
+- subprocess
+- threading
+- argparse
+- time
 
 #### Arduino IDE:
-- Additional Boards Manager URLs (Location: File > Preferences): 
+- Additional Boards Manager URLs (Location: Arduino IDE > File > Preferences): 
 ``` https://dl.espressif.com/dl/package_esp32_index.json, http://arduino.esp8266.com/stable/package_esp8266com_index.json ```
-- Custom "esp32 cam library"
-- pyduino bridge (by Daniel Saromo)
 
 ---
 ### Additional Reference
 - ESP Cam camera setting: [Here](https://randomnerdtutorials.com/esp32-cam-ov2640-camera-settings/)
+
+---
+Mandatory working tree environment:
+```bash
+[Root Location]
+├───Main-Image-Captured (Add Manually)
+├───Tugas-Akhir-IoT (This Repository)
+├───yolov5 (YOLOv5 Repository)
+```
+
+```[Root Location]``` is where you open terminal and execute python program
