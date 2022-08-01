@@ -112,7 +112,7 @@ if __name__ == '__main__':
             # Fill ESP - ColorVu IP list
             ColorVu_ESP_IP_list[IP_Cam_Relay_Array[x]]=ColorVu_cam_IP_array[x]
 
-    print(ColorVu_ESP_IP_list)
+        print(ColorVu_ESP_IP_list)
 
     
     for current_IP in IP_Cam_Relay_Array:

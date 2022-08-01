@@ -37,3 +37,9 @@ Mandatory working tree environment:
 ```
 
 ```[Root Location]``` is where you open terminal and execute python program
+---
+### To Execute Command
+- If using ESP32-Cam :  
+```python ./Tugas-Akhir-IoT/Core_Program/main.py```  
+- If using ColorVu Camera :  
+```python ./Tugas-Akhir-IoT/Core_Program/main.py --colorvu```
