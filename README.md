@@ -28,7 +28,7 @@
 - ESP Cam camera setting: [Here](https://randomnerdtutorials.com/esp32-cam-ov2640-camera-settings/)
 
 ---
-Mandatory working tree environment:
+### Mandatory working tree environment:
 ```bash
 [Root Location]
 ├───Main-Image-Captured (Add Manually)
@@ -36,9 +36,10 @@ Mandatory working tree environment:
 ├───yolov5 (YOLOv5 Repository)
 ```
 
-```[Root Location]``` is where you open terminal and execute python program
+Here ```[Root Location]``` is where you open terminal and execute python program
+
 ---
-### To Execute Command
+### Available Execute Command
 - If using ESP32-Cam :  
 ```python ./Tugas-Akhir-IoT/Core_Program/main.py```  
 - If using ColorVu Camera :  
